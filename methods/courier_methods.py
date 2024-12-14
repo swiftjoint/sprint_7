@@ -2,8 +2,7 @@ import allure
 import requests
 
 from config_urls import BASE_URL, COURIER_URL, LOGIN
-from data import LOGIN_DATA_1, LOGIN_DATA_WITHOUT_PASSWORD, LOGIN_DATA_WITHOUT_LOGIN, LOGIN_DATA_DUBLICATE, \
-    LOGIN_DATA_2, LOGIN_DATA_3
+from data import LOGIN_DATA_1, LOGIN_DATA_DUBLICATE
 from helpers import register_new_courier_and_return_login_password
 
 
@@ -32,37 +31,29 @@ class CourierMethods:
         first_name = payload["first_name"]
         return response_1, response_2, login, password, first_name
 
-    @allure.step('Отправляем запрос, на создание курьера, без логина')
+    @allure.step('Отправляем запрос, на создание курьера, без логина и пароля')
     @allure.description('Запрос на ручку api/v1/courier/, данные статичные, хранятся в файле data, '
-                        'LOGIN_DATA_WITHOUT_LOGIN')
-    def courier_create_without_login(self):
-        payload = LOGIN_DATA_WITHOUT_LOGIN
-        response = requests.post(f"{BASE_URL}{COURIER_URL}", json=payload)
+                        'TEST_DATA_3')
+    def courier_create_without_login_and_password(self, login, password, first_name):
+        data = {
+            "login": login,
+            "password": password,
+            "first_name": first_name
+        }
+        response = requests.post(f"{BASE_URL}{COURIER_URL}", json=data)
         return response
 
-    @allure.step('Отправляем запрос, на создание курьера, без пароля')
-    @allure.description('Запрос на ручку api/v1/courier/, данные статичные, хранятся в файле data, '
-                        'LOGIN_DATA_WITHOUT_PASSWORD')
-    def courier_create_without_password(self):
-        payload = LOGIN_DATA_WITHOUT_PASSWORD
-        response = requests.post(f"{BASE_URL}{COURIER_URL}", json=payload)
-        return response
-
-    @allure.step('Отправляем запрос, на авторизацию курьера, без логина')
+    @allure.step('Отправляем запрос, на авторизацию курьера, без логина и пароля')
     @allure.description('Запрос на ручку api/v1/courier/login/, данные статичные, хранятся в файле data, '
-                        'LOGIN_DATA_2')
-    def courier_without_login(self):
-        payload = LOGIN_DATA_2
-        response = requests.post(f"{BASE_URL}{COURIER_URL}{LOGIN}", json=payload)
+                        'TEST_DATA_2')
+    def courier_without_login_and_password(self, login, password):
+        data = {
+            "login": login,
+            "password": password
+        }
+        response = requests.post(f"{BASE_URL}{COURIER_URL}{LOGIN}", json=data)
         return response
 
-    @allure.step('Отправляем запрос, на авторизацию курьера, без пароля')
-    @allure.description('Запрос на ручку api/v1/courier/login/, данные статичные, хранятся в файле data, '
-                        'LOGIN_DATA_3')
-    def courier_without_password(self):
-        payload = LOGIN_DATA_3
-        response = requests.post(f"{BASE_URL}{COURIER_URL}{LOGIN}", json=payload)
-        return response
 
     @allure.step('Отправляем запрос, на авторизацию курьера, с несуществующим логином')
     @allure.description('Запрос на ручку api/v1/courier/login/, данные статичные, хранятся в файле data, '

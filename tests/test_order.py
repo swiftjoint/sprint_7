@@ -1,6 +1,7 @@
 import allure
 import pytest
 
+import data
 from data import TEST_DATA
 from methods.order_methods import OrderMethods
 
@@ -16,12 +17,12 @@ class TestOrder:
         response = order_methods.order_create(
             first_name, last_name, address, metro_station, phone, rent_time, delivery_date, color
         )
-        assert response.status_code == 201, f"Ожидаем статус-код 201, получили {response.status_code}"
-        assert "track" in response.json(), "Ожидаем, что в ответе будет поле 'track'"
+        assert response.status_code == data.SUCCESS_STATUS_CODE, f"Ожидаем статус-код {data.SUCCESS_STATUS_CODE}, получили {response.status_code}"
+        assert f"{data.EXPECTED_MESSAGE} in response.json(), Ожидаем, что в ответе будет поле {data.EXPECTED_MESSAGE}"
 
     @allure.title('Проверяем, что при запросе списка заказов, получаем в ответ список,и в нем есть orders')
     def test_get_order_list(self):
         order_methods = OrderMethods()
         response = order_methods.get_orders_list()
-        assert "orders" in response, "Ответ не содержит ключ 'orders'"
+        assert data.ORDERS_MESSAGE in response, f"Ответ не содержит ключ {data.ORDERS_MESSAGE}"
         assert len(response["orders"]) >= 0
